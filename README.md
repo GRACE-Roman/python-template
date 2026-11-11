@@ -1,201 +1,163 @@
 # python-template
 
-This repository contains a Python template suitable for starting new projects. This template has three main goals:
-- To create a properly 
-packaged Python project which requires minimal set-up effort for the user. Following the seven steps below you will have the structure of a python package in ~15 minutes.
-- To encourage proper testing. This template includes a GitHub actions workflow, `.github/workflows/ci.yml`, that will run continuous integration on the `tests` directory at every push or pull request. 
-- To encourage code and package documentation. This template includes pre-configured documentation in the `docs` directory which will automatically pull the information from the code docstrings. A GitHub actions workflow, `.github/workflows/docs.yml`, also publishes the documentation to a GitHub Pages webpage at every push or pull request.
+A Python package template for Roman GRACE projects. It gives you:
 
-This template does not assume GitHub tags, it is not set up for PyPi releases and it does not produce ReadTheDocs documentation, however such extensions can be easily added on to the template by motivated users. Please contact the template authors if you need help with these tasks.
+- A packaged Python project built from a single `pyproject.toml`, following the [Python Packaging Authority recommendations](https://packaging.python.org/en/latest/tutorials/packaging-projects/).
+- Automatic versioning from git tags with `setuptools-scm`.
+- Tests with `pytest` and coverage, run on Python 3.10–3.13 by GitHub Actions on every push and pull request (`.github/workflows/ci.yml`).
+- Linting and formatting with [Ruff](https://docs.astral.sh/ruff/), checked in CI and optionally on every commit with `pre-commit`.
+- Sphinx documentation in `docs/`, published to GitHub Pages on every push to `main` (`.github/workflows/docs.yml`).
 
-There is a lot of (sometimes contradictory) information on how to package a Python project. Here we have generally followed the [current recommendations](https://packaging.python.org/en/latest/tutorials/packaging-projects/) of the Python Packaging Authority. 
+The template is not set up for PyPI releases or ReadTheDocs, but both can be added.
 
-# How to Use This Template
+## Layout
 
-Click on the green "Use This Template" button in the upper right corner of the screen to make a copy of the template.
+```
+├── pyproject.toml            # package metadata, dependencies and tool settings
+├── src/my_package/           # your package code
+├── tests/                    # pytest tests
+├── docs/                     # Sphinx documentation
+├── .github/workflows/        # CI and docs workflows
+├── .pre-commit-config.yaml   # optional pre-commit hooks
+├── CHANGELOG.md
+├── CITATION.cff
+├── CODE_OF_CONDUCT.md
+└── LICENSE
+```
 
-Select location for the new repository. For projects related to the work of Roman GRACE, the project should live in this organization. You are however welcome to use this tempate for unrelated projects within your personal account. 
+# Creating a New Project
 
-Select a name for your repository, select if it should be Public or Private. Here as an example we will use `new_project` as the name of your new repository. 
+1. On GitHub, click **Use this template** → **Create a new repository**. Projects related to the work of Roman GRACE should live in the [`GRACE-Roman`](https://github.com/GRACE-Roman) organization; you are welcome to use the template for other projects in your personal account. The examples below use `new_project` as the repository name.
 
-Click on the `Create Repository from Template` button.
-
-# Customize the Template in 7 Easy Steps
-
-1. We recommend creating a new environment for your project. This will allow you to track dependencies a lot easier. There are several different ways to do this (`virtualenv`, `pipenv`). Here we show an example with `conda`:
-
-        conda create --name new_environment python
-        conda activate new_environment
-        
-    Do not install dependencies that are necessary for your code with `conda`. All dependencies should be specified in the `setup.cfg` files (see step 2). If you need some libraries to do diagnostic work, you can install them now (e.g., `pip install numpy matplotlib ipython`) but make sure that they are included in `setup.cfg` if your package needs them.  We recommend using `pip` for installation rather than `conda` (see some notes on the differences [here](https://www.anaconda.com/blog/understanding-conda-and-pip)), unless you need the binaries for a given library. Note: if you do not have `conda` installed, we recommend [`miniconda`](https://docs.conda.io/en/latest/miniconda.html).
-
-2. Make a copy of the repository on your computer. Click on the green `Code` button and copy the HTTPS or SSH link, depending on how you authenticate with GitHub.
-
-        git clone https://github.com/GRACE-Roman/new_project.git
-
-    or
+2. Clone the new repository:
 
         git clone git@github.com:GRACE-Roman/new_project.git
+        cd new_project
 
-    If you have not set up HTTPS or SSH authentication for GitHub on your computer, then follow the instructions [here for HTTPS](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) or [here for SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+3. Create and activate an environment, for example with `conda`:
 
-3. Edit the `pyproject.toml` file.
+        conda create --name new_project python=3.12
+        conda activate new_project
 
-    Specifically change the following lines:
+    Install your package's dependencies with `pip` from `pyproject.toml` (step 6), not with `conda`.
+
+4. Edit `pyproject.toml`:
 
         [project]
         name = "new_package_name"
-        authors = [{name = "Example Author", email = "author@example.com"}]
-        description = "An example package"
+        authors = [{name = "Your Name", email = "you@example.com"}]
+        description = "A short description"
+        dependencies = [
+            "numpy>=1.20",
+        ]
 
         [project.urls]
+        "Homepage" = "https://github.com/GRACE-Roman"
         "Bug Tracker" = "https://github.com/GRACE-Roman/new_project/issues"
         "Source Code" = "https://github.com/GRACE-Roman/new_project"
 
         [tool.setuptools_scm]
         write_to = "src/new_package_name/_version.py"
 
+    `name` is the name you will `import`. It does not have to match the repository name; use lower case letters and underscores ([PEP 8](https://peps.python.org/pep-0008/#package-and-module-names)). List every package you import directly under `dependencies`. Test and documentation dependencies live under `[project.optional-dependencies]`.
 
-    The `my_package_name` here will be the name of your package, it does not have to be the same as the name of the repository (as shown here). This will be the name used to import your package once installed. See the Python style guide [here](https://peps.python.org/pep-0008/#:~:text=Modules%20should%20have%20short%2C%20all,use%20of%20underscores%20is%20discouraged.) for package naming conventions (tl;dr: use lower case letters and underscores only).
+5. Rename the package directory and update the references to `my_package`:
 
-    As you develop your code, you will need to specify any dependencies, i.e. packages from which you have direct imports. Add any new dependencies here (you get numpy for free):
+        git mv src/my_package src/new_package_name
 
-        dependencies = [
-            "numpy",
-        ]
+    Then replace `my_package` in `tests/test_example.py`, `docs/conf.py` and `docs/index.rst`.
 
-    Test and documentation dependencies can be specified here:
+6. Install the package in editable mode with the test and docs extras:
 
-        [project.optional-dependencies]
-        docs = [
-            "sphinx",
-            "sphinx-automodapi",
-            "numpydoc",
-        ]
-        test = [
-            "pytest",
-            "pytest-doctestplus",
-            "flake8",
-            "flake8-pyproject",
-            "codecov",
-            "pytest-cov",
-        ]
+        pip install -e ".[test,docs]"
 
-    Edit as needed.
+7. Update the remaining files:
+    - `README.md`: replace this text with a description of your package.
+    - `CITATION.cff`: set the title, authors, ORCIDs, URL and release date so GitHub can offer a **Cite this repository** entry. See the [AstroBetter post](https://www.astrobetter.com/blog/2019/07/01/citing-astronomy-software-inline-text-examples/) on citing astronomy software and the [GitHub docs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files).
+    - `LICENSE`: replace `Author Name` in the copyright line.
+    - `docs/conf.py`: set `project`, `copyright` and `author`.
+    - `CHANGELOG.md`: replace the example entries.
 
-4. Rename your package. 
+8. Turn on GitHub Pages: in the repository **Settings** → **Pages**, set **Source** to **GitHub Actions**. The docs are published on the next push to `main`.
 
-    If you chose a different name for your package in `name` you should now rename your directory name as well. For example, in the previous step I changed the name of this package from the default `my_package` to `new_package_name`. Here we rename the directory too:
-    
-        cd src/
-        git mv my_package new_package_name
+🎉 You have a package.
 
-5. Edit the `README.md`. Add a short description of your package instead of this text.
+## What Not to Change
 
-6. Edit the `CITATION.cff` file to specify how you want your code cited. The `CITATION.cff` file allows you to generate a `BibTeX` citation directly from the repository page (see `Cite this repository` in the upper right corner of this page). The fields we include here are the minimum recommended in the [AstroBetter post](https://www.astrobetter.com/blog/2019/07/01/citing-astronomy-software-inline-text-examples/) on citing astronomical software with no DOI. Please review the recommendations therein if you would like to add more information to the citation. Additional information about `CITATION.cff` files can be found [here](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files).   
+- Keep the `LICENSE` file; only update the copyright holder. See [this article](https://www.astrobetter.com/blog/2014/03/10/the-whys-and-hows-of-licensing-scientific-code/) on licensing scientific code.
+- Within the `GRACE-Roman` organization, leave `CODE_OF_CONDUCT.md` as is. In a personal account, remove the bracketed text and change the reporting section to read "Any violations of the Code of Conduct should be reported to the owners of this repository."
+- You do not need `setup.py`, `setup.cfg` or `requirements.txt`. Everything belongs in `pyproject.toml`, unless you have compiled C or Fortran extensions.
 
-7. Add your code to the `src/new_package_name/` directory. All your code should be `*.py` files in this directory. Do not add other directories inside `src/` unless you know what you are doing. Add your tests to the `tests/` directory. Edit the `docs/index.rst` file to create documentation for your project. 
+# Development
 
-🎉 You have a package. 
+## Installing
 
-# What not to Change
+Install from the repository root in editable mode, so changes to the source take effect without reinstalling:
 
-1. Do not change the `LICENSE` file and definitely do not delete it. For more information, see [this article](https://www.astrobetter.com/blog/2014/03/10/the-whys-and-hows-of-licensing-scientific-code/). 
-
-2. If the copy is within the `GRACE-Roman` GitHub organization, do not edit the `CODE_OF_CONDUCT.md` file. If the copy is under your personal account, please customize the `CODE_OF_CONDUCT.md` file. One easy way to do that is to remove the text in square braces and to edit the reporting section to read "Any violations of the Code of Conduct should be reported to the owners of this repository."
-
-3. Using this Python packaging template gives you the most up-to-date way to package your Python code.  You do not need to have `setup.py`, `setup.cfg` or `requirements.txt` files.  The `setup.*` files are legacy formats that are now deprecated for most use cases. All your requirements should be listed in the `pyproject.toml` file. If you have a more complex package with C or Fortran code that needs to be compiled during install, you may also need to create a `setup.py` file, but we are going to keep things here simple.
-
-# Then What?
-
-Once you have made a local copy of the repository, you can install the package and start developing, testing and documenting it.
-
-# Versioning Your Package
-
-This package template does versioning for your package automatically using `setuptools-scm` which generates a version based on git tags in the standard semantic versioning format A.B.c.  For more information see [setuptools-scm](https://pypi.org/project/setuptools-scm/) and Python packaging [Version specifiers](https://packaging.python.org/en/latest/specifications/version-specifiers/#version-specifiers).
-
-This means that when you have version of your package that you want to tag and release, make sure HEAD is pointing the the commit where you want to tag, and use `git tag A.B.c` to tag it with a proper semantic version.  The next time you install the package, it should show you the updated version based on your tag.
-
-If you do not want to do the automatic versioning (your code is not a git repo or you just want to do your own thing) then use the [`static_version`](https://github.com/GRACE-Roman/python-template/tree/static_version) branch of the repo. This branch can also be downloaded as a ZIP file and used locally. This is not the recommended workflow however. 
-
-**Installation**
-
-With the package structure used here, you do not have to point Python to the location of your package. You absolutely SHOULD NOT be adding the package directory to your `$PYTHONPATH`. Instead, you can use `pip` to install it locally:
 ```
-cd ~/path/to/new_project
 pip install -e .
 ```
-`pip` will install all the dependencies specified in the `pyproject.toml` file. The `-e` flag makes the install editable which means that you do not have to install the package again and again after each change. Changes to your files inside the project folder will automatically reflect in changes on your installed package. If you are working in an interactive environment (`ipython`, `Jupyter`) you will need to re-import any modules that have changed. For example, after editing `module_x.py` you will need to do the following to have the changes available in the Python interpreter:
 
-```
+Do not add the package to your `$PYTHONPATH`. In an interactive session (`ipython`, Jupyter) you still need to reload a module you have edited:
+
+```python
 import importlib
+
 importlib.reload(module_x)
 ```
 
-An accessible description of `pip install` can be found [here](https://www.reddit.com/r/learnpython/comments/ayx7za/how_does_pip_install_e_work_is_there_a_specific/).
+Users who are not developing the code can install it directly from GitHub:
 
-To install a non-editable version, do:
-```
-cd ~/path/to/new_project
-pip install .
-```
-This is how you can use your package once you are no longer developing it. Any users who are not contributing code can installing your package with:
 ```
 pip install git+https://github.com/GRACE-Roman/new_project
 ```
 
-**Commit early and often**
+## Testing
 
-As you make changes to your package, get into the habit of committing changes early and often. Every time you add a new function, a new test, edit the docstring:
-```
-git add new_module.py
-git commit -m "Added a function to reverse the sprocket of the whoosle."
-```
-And every few commits:
-```
-git push
-```
-
-**Testing your code**
-
-Ideally, you should be writing tests along with the new code. To test your code, first install the package in editable mode with the optional test dependencies:
 ```
 pip install -e ".[test]"
+pytest --cov=src/new_package_name tests
 ```
 
-Then run the tests from the git repo root directory:
-```
-pytest --cov=src/<my_package> tests
-```
+The coverage report shows how much of your code the tests exercise; aim for more than 80%. CI runs the same tests on Python 3.10–3.13 and checks that the package builds.
 
-changing <my_package> to whatever your package name is.  This generates a report on how much of your code is covered by tests. Ideally this should be >80%.
+## Linting and Formatting
 
-**Checking Code Style**
+CI runs Ruff and fails if either check does:
 
-To check for compliance with the Python style guide, run `flake8`:
 ```
-flake8
+ruff check .
+ruff format --check .
 ```
 
-This will do basic linting of your code, making sure you following best coding practices and will often also find bugs.
+Run `ruff check --fix .` and `ruff format .` to fix most issues automatically. Ruff's settings are in `[tool.ruff]` in `pyproject.toml`.
 
-**Continuous Integration**
+To run these checks automatically before every commit, install the `pre-commit` hooks once:
 
-This repository come pre-set with continuous integration using GitHub Actions. Every time you push a commit or make a pull request, all tests will be automatically run by GitHub. On the GitHub page for your repository you should have an `Action` tab (forth from the left). This tab will show you the test results. While you can (and should) run the test suite locally, these runs are usually only on your operating system against one version of python. The advantage of CI is that you can test your code against different versions of python, different versions of key libraries and different operating systems. Here we have set up a simple test matrix which runs against 3 different versions of python. You can make the CI more complex if you need. You can disable/enable actions as shown [here](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow) or by deleting the `.github/workflows/ci.yml` file (use `git rm`).
+```
+pip install pre-commit
+pre-commit install
+```
 
-**Creating documentation**
+## Documentation
 
-If/when you want to update the auto-generated `sphinx` documentation, you can edit the `docs/index.rst` file. This file is in reStructuredText format. More information on making your docs pretty is available in the `sphinx` [docs](https://www.sphinx-doc.org/en/master/tutorial/index.html).
+Edit `docs/index.rst` (reStructuredText; see the [Sphinx tutorial](https://www.sphinx-doc.org/en/master/tutorial/index.html)) and build locally:
 
-To generate the documentation, you need to first install the dependencies and then make the pages:
 ```
 pip install -e ".[docs]"
-cd docs/
-make html
-open _build/html/index.html
+make -C docs html
+open docs/_build/html/index.html
 ```
-`sphinx` can also generate a PDF of your docs, but this is left as an exercise for the user.
 
-This repository is also set to auto-generate an HTML page with the documentation and creates a GitHub pages webpage. While the files are auto-generated, the page must be made visible in the first place. Go to the `Settings` tab in GitHub and in the left-hand menu navigate to the `Pages` option. Select the `gh-pages` branch in the drop down `Source` menu. This is a one-time setting. The URL for your documentation will be displayed in the green banner. The example documentation page for this repository can be found at [https://grace-roman.github.io/python-template/](https://grace-roman.github.io/python-template/). 
+The docs workflow publishes the same build to GitHub Pages on every push to `main`, once Pages is turned on (step 8). This template's own documentation is at [https://grace-roman.github.io/python-template/](https://grace-roman.github.io/python-template/). To stop publishing, disable the workflow or delete `.github/workflows/docs.yml`, and unpublish the site under **Settings** → **Pages**.
 
-You can disable/enable the auto-generated documentation builds as shown [here](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow) or by deleting the `.github/workflows/docs.yml` file (use `git rm`). To unpublish the documentation page, you also need to delete the `gh-pages` branch, see instructions [here](https://docs.github.com/en/pages/getting-started-with-github-pages/unpublishing-a-github-pages-site#unpublishing-a-project-site).
+## Versioning
+
+`setuptools-scm` sets the version from git tags in the semantic versioning format `A.B.C`. To make a release, tag the commit and push the tag:
+
+```
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+Between tags, the version includes the distance from the last tag, for example `0.1.1.dev3+g1a2b3c4`. The version is available as `new_package_name.__version__`. See the [setuptools-scm docs](https://setuptools-scm.readthedocs.io/) for details.

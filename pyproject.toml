@@ -9,7 +9,7 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.20",
 ]
@@ -19,16 +19,12 @@ dynamic = ['version']
 docs = [
     "sphinx",
     "sphinx-automodapi",
-    "numpydoc",
     "furo",
 ]
 test = [
     "pytest",
-    "pytest-doctestplus",
-    "flake8",
-    "flake8-pyproject",
-    "codecov",
     "pytest-cov",
+    "ruff",
 ]
 
 [project.urls]
