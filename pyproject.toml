@@ -32,9 +32,9 @@ test = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/roman-grs-pit"
-"Bug Tracker" = "https://github.com/roman-grs-pit/roman-grs-pit-python-template/issues"
-"Source Code" = "https://github.com/roman-grs-pit/roman-grs-pit-python-template"
+"Homepage" = "https://github.com/GRACE-Roman"
+"Bug Tracker" = "https://github.com/GRACE-Roman/python-template/issues"
+"Source Code" = "https://github.com/GRACE-Roman/python-template"
 
 [build-system]
 requires = [

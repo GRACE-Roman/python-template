@@ -30,5 +30,5 @@ All notable changes to this project will be documented in this file.
 - Core functionality
 - Documentation
 
-[Unreleased]: https://github.com/roman-grs-pit/roman-grs-pit-python-template/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/roman-grs-pit/roman-grs-pit-python-template/releases/tag/v0.1.0
+[Unreleased]: https://github.com/GRACE-Roman/python-template/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/GRACE-Roman/python-template/releases/tag/v0.1.0

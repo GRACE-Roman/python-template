@@ -6,7 +6,7 @@ All communication should be appropriate for a professional audience including pe
 
 Thank you for helping make this a welcoming, friendly community for all.
 
-**Reporting**: Please report any violations of the Code of Conduct to the owners of the [`Roman GRS PIT` [GitHub organization](https://github.com/roman-grs-pit)]. All community leaders are obligated to respect the privacy and security of the reporter of any incident.
+**Reporting**: Please report any violations of the Code of Conduct to the owners of the [`Roman GRACE` [GitHub organization](https://github.com/GRACE-Roman)]. All community leaders are obligated to respect the privacy and security of the reporter of any incident.
 
 **Enforcement**: We follow the enforcement guidelines of the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).  
 
